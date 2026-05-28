@@ -1,6 +1,6 @@
 interface:
   display_name: "AI MATLAB Skill"
-  short_description: "Control MATLAB from agent workflows"
-  default_prompt: "Use $ai-matlab-skill to run, verify, or troubleshoot MATLAB code from an AI agent workflow."
+  short_description: "Control MATLAB from auditable agent workflows"
+  default_prompt: "Use $ai-matlab-skill to choose the narrowest MATLAB control route, verify availability, run or dry-run safely, and report reproducible evidence."
 policy:
   allow_implicit_invocation: true

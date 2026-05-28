@@ -1,6 +1,6 @@
 # GitHub MATLAB Control Routes
 
-Last researched: 2026-05-20.
+Last researched: 2026-05-28.
 
 Use this reference when selecting a MATLAB control route for an agent, automation script, or CI workflow.
 
@@ -33,6 +33,7 @@ Use this reference when selecting a MATLAB control route for an agent, automatio
 
 ## Practical Notes
 
+- The official MATLAB Agentic Toolkit is useful as an architecture reference: separate agent skills from executable MCP routes, provide setup/configuration guidance, and include verification-oriented workflows. This project adapts those ideas without copying upstream files.
 - On Windows, old COM/ActiveX routes such as `Matlab.Application` exist but should be a fallback only. They are platform-specific and less aligned with current MathWorks agent tooling.
 - If MATLAB is not on `PATH`, search standard install roots first, then ask the user for the MATLAB executable path.
 - For private CI or licensed products, GitHub Actions may need a MathWorks license token such as `MLM_LICENSE_TOKEN`.

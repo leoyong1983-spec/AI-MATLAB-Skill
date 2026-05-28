@@ -3,17 +3,23 @@ param(
     [string]$Command,
     [string]$File,
     [string]$WorkDir,
+    [switch]$SmokeTest,
     [switch]$DryRun
 )
 
 $ErrorActionPreference = "Stop"
 
-if (-not $Command -and -not $File) {
-    throw "Provide either -Command or -File."
+$routeCount = 0
+if ($Command) { $routeCount += 1 }
+if ($File) { $routeCount += 1 }
+if ($SmokeTest) { $routeCount += 1 }
+
+if ($routeCount -eq 0) {
+    throw "Provide -Command, -File, or -SmokeTest."
 }
 
-if ($Command -and $File) {
-    throw "Use only one of -Command or -File."
+if ($routeCount -gt 1) {
+    throw "Use only one of -Command, -File, or -SmokeTest."
 }
 
 if (-not $MatlabPath) {
@@ -44,7 +50,9 @@ if (-not $MatlabPath) {
     throw "MATLAB executable not found. Pass -MatlabPath or add matlab to PATH."
 }
 
-if ($File) {
+if ($SmokeTest) {
+    $matlabCommand = "disp(matlabroot); disp(version)"
+} elseif ($File) {
     $resolvedFile = Resolve-Path -LiteralPath $File
     $matlabCommand = "run('$($resolvedFile.Path.Replace("'", "''"))')"
 } else {
@@ -62,17 +70,21 @@ if ($DryRun) {
     exit 0
 }
 
-$startInfo = @{
-    FilePath = $MatlabPath
-    ArgumentList = $arguments
-    Wait = $true
-    NoNewWindow = $true
-    PassThru = $true
-}
-
 if ($WorkDir) {
-    $startInfo.WorkingDirectory = (Resolve-Path -LiteralPath $WorkDir).Path
+    Push-Location -LiteralPath (Resolve-Path -LiteralPath $WorkDir).Path
 }
 
-$process = Start-Process @startInfo
-exit $process.ExitCode
+try {
+    & $MatlabPath @arguments
+    $exitCode = $LASTEXITCODE
+} finally {
+    if ($WorkDir) {
+        Pop-Location
+    }
+}
+
+if ($null -eq $exitCode) {
+    exit 0
+}
+
+exit $exitCode
