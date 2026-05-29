@@ -20,6 +20,7 @@ REQUIRED_FILES = [
     "references/agentic-toolkit-lessons.md",
     "references/capability-roadmap.md",
     "references/refprop-matlab-integration.md",
+    "references/refprop-github-case-studies.md",
     "scripts/probe_matlab.py",
     "scripts/probe_refprop.py",
     "scripts/run_matlab_batch.ps1",
@@ -68,14 +69,14 @@ def check_skill(errors: list[str], warnings: list[str]) -> None:
         if section not in text:
             errors.append(f"SKILL.md missing section: {section}")
 
-    if "让龙虾调用 MATLAB" not in text:
-        warnings.append("SKILL.md Chinese handoff example is missing or may be corrupted")
-
-    if re.search(r"When the user says.*\?MATLAB", text):
-        warnings.append("SKILL.md may contain damaged mojibake text near the Chinese handoff section")
+    if "让 Codex 调用 MATLAB" not in text:
+        warnings.append("SKILL.md Chinese handoff example is missing")
 
     if "Do not copy files from the official toolkit" not in text:
         warnings.append("SKILL.md should state the no-copy upstream boundary")
+
+    if "refprop-github-case-studies.md" not in text:
+        warnings.append("SKILL.md missing REFPROP GitHub case-study reference")
 
 
 def check_readme(errors: list[str], warnings: list[str]) -> None:
@@ -93,6 +94,9 @@ def check_readme(errors: list[str], warnings: list[str]) -> None:
 
     if "scripts/probe_refprop.py --fluid HYDROGEN" not in text:
         warnings.append("README.md missing REFPROP probe command")
+
+    if "mathworks/matlab-interface-refprop-coolprop" not in text:
+        warnings.append("README.md missing MathWorks REFPROP interface reference")
 
 
 def check_internal_script_links(errors: list[str], warnings: list[str]) -> None:

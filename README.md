@@ -11,7 +11,7 @@ The project is inspired by the public architecture of MathWorks' MATLAB Agentic 
 - Local REFPROP file discovery: `scripts/probe_refprop.py`.
 - Deterministic MATLAB batch execution: `scripts/run_matlab_batch.ps1`.
 - Agent-facing metadata: `agents/openai.yaml`.
-- Reference notes for MATLAB MCP, Python Engine, CI, Simulink, and proxy routes.
+- Reference notes for MATLAB MCP, Python Engine, CI, Simulink, proxy routes, and REFPROP GitHub case studies.
 
 ## Route Priority
 
@@ -22,7 +22,7 @@ Use the narrowest route that proves the requested result:
 3. `matlab -batch` for deterministic local scripts, exports, and repeatable checks.
 4. `matlab-actions/*` for GitHub Actions.
 5. Simulink Agentic Toolkit for model-based-design tasks.
-6. Local REFPROP through MATLAB `refpropm` wrappers when fluid-property calculations need NIST REFPROP.
+6. Local REFPROP through MATLAB `getFluidProperty`, legacy `refpropm`, or MATLAB-to-Python `ctREFPROP` routes when fluid-property calculations need NIST REFPROP.
 7. Browser or Jupyter proxy only when an interactive web/notebook session is required.
 
 ## Quick Checks
@@ -54,7 +54,10 @@ For any meaningful MATLAB run, report:
 - Level 0: package self-check. Requires Python only.
 - Level 1: MATLAB batch execution. Requires a discoverable `matlab.exe`; PATH is helpful but not required.
 - Level 2: Python Engine for MATLAB. Requires `matlab.engine` installed for the active Python environment.
-- REFPROP: local DLL and fluid-file discovery plus a MATLAB `refpropm` smoke test. This is separate from MATLAB availability.
+- REFPROP R0: local REFPROP DLL and fluid-file discovery.
+- REFPROP R1: MATLAB wrapper discovery, such as `which refpropm` or `which getFluidProperty`.
+- REFPROP R2: MATLAB property-call smoke test.
+- REFPROP R3: business model uses REFPROP values with documented units and composition basis.
 
 ## Local Python Engine Setup
 
@@ -76,3 +79,6 @@ Install from the local MATLAB `extern\engines\python` directory when matching a 
 - MATLAB MCP Core Server: https://github.com/matlab/matlab-mcp-core-server
 - MATLAB Engine for Python: https://github.com/mathworks/matlab-engine-for-python
 - MATLAB Actions: https://github.com/matlab-actions
+- MathWorks MATLAB interface to REFPROP and CoolProp: https://github.com/mathworks/matlab-interface-refprop-coolprop
+- NIST REFPROP wrappers: https://github.com/usnistgov/REFPROP-wrappers
+- MATLAB ORC REFPROP case study: https://github.com/engineer-scientist/organic-Rankine-cycle

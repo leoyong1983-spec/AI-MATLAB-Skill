@@ -32,6 +32,7 @@ Choose the narrowest route that satisfies the request:
 
 Read `references/github-control-routes.md` when you need repository names, install routes, or tradeoffs.
 Read `references/refprop-matlab-integration.md` when MATLAB must call local REFPROP for hydrogen or other fluid properties.
+Read `references/refprop-github-case-studies.md` when you need public GitHub examples, route tradeoffs, or REFPROP-specific design patterns.
 
 ## First Checks
 
@@ -165,6 +166,13 @@ Use Simulink Agentic Toolkit guidance for model inspection, simulation, and gene
 
 Use the local REFPROP route when a MATLAB task needs high-accuracy fluid properties from NIST REFPROP. The reviewed hydrogen tank source uses a `refpropm` MATLAB wrapper rather than direct business-code calls to the DLL.
 
+Choose the REFPROP route explicitly:
+
+1. Use legacy `refpropm` for inherited MATLAB code that already depends on it.
+2. Prefer MathWorks `getFluidProperty` for new MATLAB-native code when the one-time MEX setup and compiler are available.
+3. Use MATLAB calling Python `ctREFPROP` when a NIST-supported route is needed from inside MATLAB.
+4. Treat Python Engine for MATLAB as a different direction of control; it does not prove MATLAB can call REFPROP.
+
 Before trusting calculations:
 
 1. Probe local REFPROP files:
@@ -177,6 +185,7 @@ python scripts/probe_refprop.py --fluid HYDROGEN
 
 ```matlab
 which refpropm
+which getFluidProperty
 ```
 
 3. Run a hydrogen property round trip:
@@ -189,7 +198,15 @@ p = refpropm('P','D',d,'U',u,'hydrogen');
 disp([u d t p])
 ```
 
-Treat `MATLAB can run` and `MATLAB can call REFPROP` as separate capability levels. REFPROP success requires the DLL, fluid files, wrapper files, MATLAB bitness compatibility, and correct units.
+For MathWorks `getFluidProperty`, first confirm the MEX build route has been completed, then run one multi-property call with explicit units:
+
+```matlab
+libLoc = 'C:\Program Files (x86)\REFPROP';
+[h, s, d] = getFluidProperty(libLoc, 'H,S,D', 'T', 300, 'P', 1000, 'Hydrogen', 1, 1, 'MKS');
+disp([h s d])
+```
+
+Treat `MATLAB can run` and `MATLAB can call REFPROP` as separate capability levels. REFPROP success requires the DLL, fluid files, wrapper or MEX files, MATLAB bitness compatibility, correct units, and correct composition basis. Do not copy REFPROP wrapper files from public examples into user projects without explicit approval and license review.
 
 ### Package Or Handoff
 
@@ -204,7 +221,7 @@ For handoff to another agent or developer, include:
 
 ## Chinese Agent Handoff
 
-When the user says "让龙虾调用 MATLAB", "让爱马仕跑一下 MATLAB", or similar, interpret that as an agent-control request. Respond with:
+When the user says "让 Codex 调用 MATLAB", "让龙虾调用 MATLAB", "让爱马仕跑一下 MATLAB", or similar, interpret that as an agent-control request. Respond with:
 
 1. selected control route,
 2. whether local MATLAB is available,

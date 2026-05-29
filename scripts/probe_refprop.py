@@ -97,7 +97,13 @@ def classify(results: list[dict]) -> dict:
     }
 
 
-def smoke_test_template(fluid: str) -> list[str]:
+def matlab_path(path: str | None) -> str:
+    if not path:
+        return "<REFPROP root>"
+    return path.replace("\\", "/")
+
+
+def refpropm_smoke_test_template(fluid: str) -> list[str]:
     return [
         "which refpropm",
         f"u = refpropm('U','T',300,'P',1000,'{fluid.lower()}');",
@@ -105,6 +111,23 @@ def smoke_test_template(fluid: str) -> list[str]:
         f"t = refpropm('T','D',d,'U',u,'{fluid.lower()}');",
         f"p = refpropm('P','D',d,'U',u,'{fluid.lower()}');",
         "disp([u d t p])",
+    ]
+
+
+def get_fluid_property_smoke_test_template(fluid: str, root: str | None) -> list[str]:
+    return [
+        "which getFluidProperty",
+        f"libLoc = '{matlab_path(root)}';",
+        f"[h, s, d] = getFluidProperty(libLoc, 'H,S,D', 'T', 300, 'P', 1000, '{fluid.title()}', 1, 1, 'MKS');",
+        "disp([h s d])",
+    ]
+
+
+def ctrefprop_smoke_test_template(root: str | None) -> list[str]:
+    return [
+        "pyversion",
+        f"RP = py.ctREFPROP.ctREFPROP.REFPROPFunctionLibrary('{matlab_path(root)}');",
+        "disp(RP.RPVersion())",
     ]
 
 
@@ -117,6 +140,7 @@ def main() -> int:
     roots = find_refprop_roots(args.root)
     results = [inspect_root(root, args.fluid) for root in roots]
     summary = classify(results)
+    selected_root = summary.get("selected_root")
 
     print(
         json.dumps(
@@ -125,7 +149,12 @@ def main() -> int:
                 "fluid": args.fluid,
                 "summary": summary,
                 "roots": results,
-                "matlab_smoke_test_template": smoke_test_template(args.fluid),
+                "matlab_smoke_test_template": refpropm_smoke_test_template(args.fluid),
+                "matlab_smoke_test_templates": {
+                    "legacy_refpropm": refpropm_smoke_test_template(args.fluid),
+                    "mathworks_getFluidProperty": get_fluid_property_smoke_test_template(args.fluid, selected_root),
+                    "matlab_python_ctREFPROP": ctrefprop_smoke_test_template(selected_root),
+                },
             },
             indent=2,
             ensure_ascii=False,

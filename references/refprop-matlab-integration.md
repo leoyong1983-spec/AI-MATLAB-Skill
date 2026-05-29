@@ -124,3 +124,13 @@ For future REFPROP tasks, report capability in layers:
 3. MATLAB-DLL loading: first `refpropm` call succeeds.
 4. Property smoke test: hydrogen `T/P -> U/D -> T/P` round trip passes.
 5. Business model: charging/discharging loop uses REFPROP values in the intended units.
+
+## GitHub Case-Study Lessons
+
+Public GitHub examples show three practical REFPROP routes for MATLAB:
+
+1. Legacy `refpropm` wrappers, common in older engineering scripts and in the reviewed local hydrogen tank source.
+2. MathWorks `getFluidProperty`, a newer MATLAB-native facade that can call REFPROP or CoolProp after a one-time REFPROP MEX setup.
+3. MATLAB calling NIST `ctREFPROP` through MATLAB's Python bridge, which is separate from Python controlling MATLAB through MATLAB Engine.
+
+For inherited source, preserve the existing route first so numeric results stay reproducible. For new reusable examples, prefer a facade layer around property calls so the business model does not depend directly on one wrapper's argument quirks. See `references/refprop-github-case-studies.md` for the repository review and route-selection details.
