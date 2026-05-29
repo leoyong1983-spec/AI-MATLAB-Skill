@@ -19,7 +19,9 @@ REQUIRED_FILES = [
     "references/github-control-routes.md",
     "references/agentic-toolkit-lessons.md",
     "references/capability-roadmap.md",
+    "references/refprop-matlab-integration.md",
     "scripts/probe_matlab.py",
+    "scripts/probe_refprop.py",
     "scripts/run_matlab_batch.ps1",
 ]
 
@@ -37,6 +39,7 @@ REQUIRED_README_COMMANDS = [
     "python scripts/probe_matlab.py",
     "python scripts/probe_matlab.py --check-engine",
     "python scripts/probe_matlab.py --smoke-test",
+    "python scripts/probe_refprop.py --fluid HYDROGEN",
     "powershell -NoProfile -ExecutionPolicy Bypass -File .\\scripts\\run_matlab_batch.ps1 -SmokeTest -DryRun",
     "python scripts/verify_skill_package.py",
 ]
@@ -87,6 +90,9 @@ def check_readme(errors: list[str], warnings: list[str]) -> None:
 
     if "https://github.com/matlab/matlab-agentic-toolkit" not in text:
         warnings.append("README.md missing official toolkit reference URL")
+
+    if "scripts/probe_refprop.py --fluid HYDROGEN" not in text:
+        warnings.append("README.md missing REFPROP probe command")
 
 
 def check_internal_script_links(errors: list[str], warnings: list[str]) -> None:

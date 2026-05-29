@@ -15,6 +15,7 @@ AI-MATLAB-Skill
 | Level 0 | Package self-check | PASS | `python scripts/verify_skill_package.py` returned `status: ok` with no warnings. |
 | Level 1 | MATLAB batch execution | PASS | `matlab.exe -batch` and `scripts/run_matlab_batch.ps1 -SmokeTest` returned exit code 0. |
 | Level 2 | Python Engine for MATLAB | PASS | Project `.venv` imports `matlab.engine` and `start_matlab()` returns R2025b. |
+| REFPROP files | Local REFPROP installation | PASS | `scripts/probe_refprop.py --fluid HYDROGEN` found the DLLs, `fluids`, `HYDROGEN.FLD`, and `hmx.bnc`. |
 
 ## MATLAB
 
@@ -41,11 +42,22 @@ AI-MATLAB-Skill
 - `start_matlab`: Pass
 - MATLAB version from engine: `25.2.0.2998904 (R2025b)`
 
+## REFPROP
+
+- Detected root: `C:\Program Files (x86)\REFPROP`
+- 64-bit DLL: `C:\Program Files (x86)\REFPROP\REFPRP64.DLL`
+- 32-bit DLL: `C:\Program Files (x86)\REFPROP\refprop.dll`
+- Fluids directory: `C:\Program Files (x86)\REFPROP\fluids`
+- Hydrogen fluid file: `C:\Program Files (x86)\REFPROP\fluids\HYDROGEN.FLD`
+- Mixtures directory: `C:\Program Files (x86)\REFPROP\mixtures`
+- MATLAB wrapper smoke test: Not run in this check; requires `refpropm.m` and prototype files on MATLAB path.
+
 ## Commands
 
 ```powershell
 python scripts/verify_skill_package.py
 python scripts/probe_matlab.py --check-engine
+python scripts/probe_refprop.py --fluid HYDROGEN
 .\.venv\Scripts\python.exe scripts/probe_matlab.py --start-engine --smoke-test
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_matlab_batch.ps1 -SmokeTest -DryRun
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_matlab_batch.ps1 -SmokeTest

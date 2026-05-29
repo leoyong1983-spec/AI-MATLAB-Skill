@@ -8,6 +8,7 @@ The project is inspired by the public architecture of MathWorks' MATLAB Agentic 
 
 - A Codex skill entry point: `SKILL.md`.
 - Local MATLAB discovery: `scripts/probe_matlab.py`.
+- Local REFPROP file discovery: `scripts/probe_refprop.py`.
 - Deterministic MATLAB batch execution: `scripts/run_matlab_batch.ps1`.
 - Agent-facing metadata: `agents/openai.yaml`.
 - Reference notes for MATLAB MCP, Python Engine, CI, Simulink, and proxy routes.
@@ -21,7 +22,8 @@ Use the narrowest route that proves the requested result:
 3. `matlab -batch` for deterministic local scripts, exports, and repeatable checks.
 4. `matlab-actions/*` for GitHub Actions.
 5. Simulink Agentic Toolkit for model-based-design tasks.
-6. Browser or Jupyter proxy only when an interactive web/notebook session is required.
+6. Local REFPROP through MATLAB `refpropm` wrappers when fluid-property calculations need NIST REFPROP.
+7. Browser or Jupyter proxy only when an interactive web/notebook session is required.
 
 ## Quick Checks
 
@@ -29,6 +31,7 @@ Use the narrowest route that proves the requested result:
 python scripts/probe_matlab.py
 python scripts/probe_matlab.py --check-engine
 python scripts/probe_matlab.py --smoke-test
+python scripts/probe_refprop.py --fluid HYDROGEN
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_matlab_batch.ps1 -SmokeTest -DryRun
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_matlab_batch.ps1 -SmokeTest
 python scripts/verify_skill_package.py
@@ -51,6 +54,7 @@ For any meaningful MATLAB run, report:
 - Level 0: package self-check. Requires Python only.
 - Level 1: MATLAB batch execution. Requires a discoverable `matlab.exe`; PATH is helpful but not required.
 - Level 2: Python Engine for MATLAB. Requires `matlab.engine` installed for the active Python environment.
+- REFPROP: local DLL and fluid-file discovery plus a MATLAB `refpropm` smoke test. This is separate from MATLAB availability.
 
 ## Local Python Engine Setup
 

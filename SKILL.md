@@ -27,9 +27,11 @@ Choose the narrowest route that satisfies the request:
 4. Use `matlab-actions/*` when the task belongs in GitHub Actions or repository CI.
 5. Use Simulink Agentic Toolkit only for Simulink/model-based-design work.
 6. Use browser/Jupyter proxy only when the user explicitly needs a browser or notebook session.
-7. Use manual user instructions only when automation is blocked by missing software, missing licenses, or missing permissions.
+7. Use a REFPROP wrapper route when MATLAB must calculate thermophysical properties from local NIST REFPROP files.
+8. Use manual user instructions only when automation is blocked by missing software, missing licenses, or missing permissions.
 
 Read `references/github-control-routes.md` when you need repository names, install routes, or tradeoffs.
+Read `references/refprop-matlab-integration.md` when MATLAB must call local REFPROP for hydrogen or other fluid properties.
 
 ## First Checks
 
@@ -158,6 +160,36 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_matlab_batch.p
 ### Work With Simulink
 
 Use Simulink Agentic Toolkit guidance for model inspection, simulation, and generated artifacts. Keep model edits small, save copies when experimenting, and report changed model files explicitly.
+
+### Work With REFPROP
+
+Use the local REFPROP route when a MATLAB task needs high-accuracy fluid properties from NIST REFPROP. The reviewed hydrogen tank source uses a `refpropm` MATLAB wrapper rather than direct business-code calls to the DLL.
+
+Before trusting calculations:
+
+1. Probe local REFPROP files:
+
+```powershell
+python scripts/probe_refprop.py --fluid HYDROGEN
+```
+
+2. Confirm MATLAB can see the wrapper:
+
+```matlab
+which refpropm
+```
+
+3. Run a hydrogen property round trip:
+
+```matlab
+u = refpropm('U','T',300,'P',1000,'hydrogen');
+d = refpropm('D','T',300,'P',1000,'hydrogen');
+t = refpropm('T','D',d,'U',u,'hydrogen');
+p = refpropm('P','D',d,'U',u,'hydrogen');
+disp([u d t p])
+```
+
+Treat `MATLAB can run` and `MATLAB can call REFPROP` as separate capability levels. REFPROP success requires the DLL, fluid files, wrapper files, MATLAB bitness compatibility, and correct units.
 
 ### Package Or Handoff
 
