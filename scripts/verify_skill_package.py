@@ -27,6 +27,7 @@ REQUIRED_FILES = [
 ]
 
 REQUIRED_SKILL_SECTIONS = [
+    "## Bilingual Purpose / 中英双语说明",
     "## Route Selection",
     "## First Checks",
     "## Verification Ladder",
@@ -44,6 +45,8 @@ REQUIRED_README_COMMANDS = [
     "powershell -NoProfile -ExecutionPolicy Bypass -File .\\scripts\\run_matlab_batch.ps1 -SmokeTest -DryRun",
     "python scripts/verify_skill_package.py",
 ]
+
+MOJIBAKE_MARKERS = ["璁?", "璁╅", "璋冪敤", "铏捐皟", "粫璺戜竴"]
 
 
 def read_text(path: Path) -> str:
@@ -78,6 +81,9 @@ def check_skill(errors: list[str], warnings: list[str]) -> None:
     if "refprop-github-case-studies.md" not in text:
         warnings.append("SKILL.md missing REFPROP GitHub case-study reference")
 
+    if any(marker in text for marker in MOJIBAKE_MARKERS):
+        warnings.append("SKILL.md appears to contain mojibake Chinese text")
+
 
 def check_readme(errors: list[str], warnings: list[str]) -> None:
     path = ROOT / "README.md"
@@ -98,6 +104,12 @@ def check_readme(errors: list[str], warnings: list[str]) -> None:
     if "mathworks/matlab-interface-refprop-coolprop" not in text:
         warnings.append("README.md missing MathWorks REFPROP interface reference")
 
+    if "Bilingual Summary / 中英双语说明" not in text:
+        warnings.append("README.md missing bilingual summary section")
+
+    if "auditable" not in text or "可审计" not in text:
+        warnings.append("README.md bilingual summary should explain auditable workflow in both languages")
+
 
 def check_internal_script_links(errors: list[str], warnings: list[str]) -> None:
     docs = [ROOT / "SKILL.md", ROOT / "README.md", ROOT / "references/github-control-routes.md"]
@@ -113,7 +125,7 @@ def check_internal_script_links(errors: list[str], warnings: list[str]) -> None:
                 warnings.append(f"{doc.relative_to(ROOT)} references missing script: {match}")
 
 
-def check_agent_metadata(errors: list[str]) -> None:
+def check_agent_metadata(errors: list[str], warnings: list[str]) -> None:
     path = ROOT / "agents/openai.yaml"
     if not path.is_file():
         return
@@ -129,6 +141,9 @@ def check_agent_metadata(errors: list[str]) -> None:
         if fragment not in text:
             errors.append(f"agents/openai.yaml missing key: {fragment}")
 
+    if "可审计" not in text:
+        warnings.append("agents/openai.yaml missing Chinese bilingual metadata")
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Verify the AI MATLAB Skill package.")
@@ -142,7 +157,7 @@ def main() -> int:
     check_skill(errors, warnings)
     check_readme(errors, warnings)
     check_internal_script_links(errors, warnings)
-    check_agent_metadata(errors)
+    check_agent_metadata(errors, warnings)
 
     status = "ok"
     if errors or (args.strict and warnings):

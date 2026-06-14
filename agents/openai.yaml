@@ -1,6 +1,6 @@
 interface:
   display_name: "AI MATLAB Skill"
-  short_description: "Control MATLAB from auditable agent workflows"
-  default_prompt: "Use $ai-matlab-skill to choose the narrowest MATLAB control route, verify availability, run or dry-run safely, and report reproducible evidence."
+  short_description: "Control MATLAB from auditable agent workflows / 以可审计流程控制 MATLAB"
+  default_prompt: "Use $ai-matlab-skill to choose the narrowest MATLAB control route, verify availability, run or dry-run safely, and report reproducible evidence. 使用 $ai-matlab-skill 选择最小可行 MATLAB 控制路线，验证可用性，安全运行或 dry-run，并报告可复现证据。"
 policy:
   allow_implicit_invocation: true

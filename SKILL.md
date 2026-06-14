@@ -7,6 +7,12 @@ description: Control MATLAB from AI agents such as Codex, Claude, custom assista
 
 Use this skill to control MATLAB in an auditable, agent-friendly way. Prefer official MathWorks routes first, then fall back to scriptable local routes.
 
+## Bilingual Purpose / 中英双语说明
+
+**English.** Use this skill when an AI agent needs to run, inspect, verify, or hand off MATLAB work with explicit evidence. The skill separates route selection from execution, so MATLAB MCP, Python Engine, batch mode, GitHub Actions, Simulink, and REFPROP workflows can be handled at the right capability level.
+
+**中文。** 当 AI 智能体需要运行、检查、验证或交接 MATLAB 工作时，使用本技能。本技能把路线选择和实际执行分开处理，使 MATLAB MCP、Python Engine、批处理、GitHub Actions、Simulink 以及 REFPROP 物性计算都能按合适的能力等级处理。
+
 This project learns from MathWorks' official MATLAB Agentic Toolkit at the design level:
 
 - keep agent instructions separate from executable MATLAB routes;

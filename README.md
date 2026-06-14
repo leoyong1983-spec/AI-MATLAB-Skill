@@ -4,6 +4,16 @@ This repository contains a compact Codex skill for controlling MATLAB from AI ag
 
 The project is inspired by the public architecture of MathWorks' MATLAB Agentic Toolkit, but it does not vendor or copy upstream implementation files. The local design intentionally stays smaller: one practical skill, a few probe scripts, and reference notes that help an agent choose the right MATLAB control path.
 
+## Bilingual Summary / 中英双语说明
+
+**English.** AI MATLAB Skill helps AI agents control MATLAB through explicit, verifiable routes: MATLAB MCP, MATLAB Engine for Python, `matlab -batch`, GitHub Actions, Simulink workflows, and local REFPROP property routes. It is designed for engineering work where every meaningful run should leave evidence: selected route, command, MATLAB availability, exit status, key output, generated files, and remaining assumptions.
+
+**中文。** AI MATLAB Skill 用于帮助 AI 智能体以可审计、可复现的方式控制 MATLAB。它把 MATLAB MCP、Python Engine、`matlab -batch`、GitHub Actions、Simulink 和本机 REFPROP 物性计算拆成不同能力路线，并要求每次关键运行都留下证据：所选路线、命令、MATLAB 可用性、退出状态、关键输出、生成文件以及未验证假设。
+
+**English.** The project borrows architecture-level lessons from official MathWorks and NIST public projects, but keeps its own implementation, verification ladder, safety boundaries, and handoff format. It does not copy upstream toolkit or REFPROP wrapper source code.
+
+**中文。** 本项目只学习 MathWorks 和 NIST 公开项目中的架构经验，不照搬上游工具包或 REFPROP wrapper 源码；本仓库保留自己的实现、能力分级、验证阶梯、安全边界和交接格式。
+
 ## What This Project Provides
 
 - A Codex skill entry point: `SKILL.md`.
